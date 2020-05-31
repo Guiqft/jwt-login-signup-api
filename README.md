@@ -17,7 +17,7 @@ The body must have:
 It returns the following:
 ```json
 {
-    acess_token = {jwt}
+    "acess_token": "{jwt}"
 }
 ```
 The `access_token` is signed with the secretKey located at the `config.json` file.
@@ -33,7 +33,7 @@ The body must have:
 It returns the following:
 ```json
 {
-    acess_token = {jwt}
+    "acess_token": "{jwt}"
 }
 ```
 The `access_token` is signed with the secretKey located at the `config.json` file.
