@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const config = require('../config');
+
 //to validate inputs
 const { check, validationResult } = require('express-validator')
 
@@ -45,7 +47,12 @@ routes.post('/auth/signup', validationRules, async (request, response) => {
 
     await userRepository.save(request.body);
 
-    return response.json();
+
+    //retrieving user to take the Date parameters
+    const user = await userRepository.getUserByEmail(request.body.email);
+    const token = jwt.sign({ user }, config.secretKey);
+
+    return response.send(JSON.stringify({ acess_token: token }));
 });
 
 //user login
@@ -59,20 +66,20 @@ routes.post('/auth/login', async (request, response) => {
     const isPasswordCorrect = await bcrypt.compare(request.body.password, user.password);
 
     if (isPasswordCorrect) {
-        const token = jwt.sign({ user }, 'secretKey');
-        return response.send(JSON.stringify({ authorization: token }));
+        const token = jwt.sign({ user }, config.secretKey);
+        return response.send(JSON.stringify({ acess_token: token }));
     }
     return response.sendStatus(500);;
 });
 
 //get user using token
-routes.get('/user/', async (request, response) => {
+routes.get('/user', async (request, response) => {
     // Gather the jwt access token from the request header
     const token = request.headers['authorization'];
 
     if (token == null) return response.sendStatus(401); // if there isn't any token
   
-    await jwt.verify(token, 'secretKey', (err, authData) => {
+    await jwt.verify(token, config.secretKey, (err, authData) => {
         if(err) {
             console.log(err);
             response.sendStatus(403);
