@@ -33,13 +33,6 @@ routes.options("/*", (request, response) => {
     response.sendStatus(204);
 });
 
-//listing all the users
-routes.get('/auth/signup', async (request, response) => {
-    await userRepository.list(request, response);
-
-    return response.json();
-});
-
 //user signup
 routes.post('/auth/signup', validationRules, async (request, response) => {
     console.log(request.body);
@@ -71,5 +64,25 @@ routes.post('/auth/login', async (request, response) => {
     }
     return response.sendStatus(500);;
 });
+
+//get user using token
+routes.get('/user/', async (request, response) => {
+    // Gather the jwt access token from the request header
+    const token = request.headers['authorization'];
+
+    if (token == null) return response.sendStatus(401); // if there isn't any token
+  
+    await jwt.verify(token, 'secretKey', (err, authData) => {
+        if(err) {
+            console.log(err);
+            response.sendStatus(403);
+        } else {
+            response.json({
+                authData
+            });
+        }
+    });
+});
+
 
 module.exports = routes;
