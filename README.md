@@ -67,5 +67,13 @@ It returns the following:
 
 Just clone the repository, run `npm install` and then `npm start`.
 
-If you want to run it on another port, just change  the `app.listen(PORT)` on index.js.
+If you want to run it on another port, just change  the `app.listen(PORT)` on src/index.js.
 
+## Libraries 
+- [nodemon](https://github.com/remy/nodemon): Auto restart development server
+- [express](https://github.com/expressjs/express): Framework to write the routes
+- [express-validator](https://github.com/express-validator/express-validator): Middleware to validate requests
+- [knex](https://github.com/knex/knex): Query builder for communicate with database
+- [sqlite3](https://github.com/mapbox/node-sqlite3): SQLite client 
+- [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken): Manage json tokens for authentication
+- [bcrypt](https://github.com/kelektiv/node.bcrypt.js/): Encrypt passwords
