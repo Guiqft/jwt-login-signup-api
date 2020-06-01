@@ -18,9 +18,9 @@ const validationRules = [
     //checking if email is already in use 
     check('email').isEmail().custom(value => {
         return userRepository.getUserByEmail(value).then(user => {
-        if (user) {
-            return Promise.reject('E-mail already in use');
-        }
+            if (user) {
+                return Promise.reject('E-mail already in use');
+            }
         })
     }),
     check('password').isLength({ min: 8 }),
@@ -60,16 +60,20 @@ routes.post('/auth/login', async (request, response) => {
     response.header('access-control-allow-origin', '*');
 
     const user = await userRepository.getUserByEmail(request.body.email);
-    console.log(user);
 
-    //comparing the passwords
-    const isPasswordCorrect = await bcrypt.compare(request.body.password, user.password);
+    if(!user)
+        return response.sendStatus(401); //passed email isn't registered
+    else {
+        //comparing the passwords
+        const isPasswordCorrect = await bcrypt.compare(request.body.password, user.password);
 
-    if (isPasswordCorrect) {
-        const token = jwt.sign({ user }, config.secretKey);
-        return response.send(JSON.stringify({ acess_token: token }));
+        if (isPasswordCorrect) {
+            const token = jwt.sign({ user }, config.secretKey);
+            return response.send(JSON.stringify({ acess_token: token }));
+        }
+
+        return response.sendStatus(401);
     }
-    return response.sendStatus(500);;
 });
 
 //get user using token

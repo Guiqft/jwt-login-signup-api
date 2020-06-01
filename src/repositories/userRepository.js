@@ -35,11 +35,11 @@ const hashPassword = async (plaintextPassword) => {
 }
 
 //function to get the user in the database that email matches with the requested email
-const getUserByEmail = (email) =>
+const getUserByEmail = (email) => 
     connection('users')
         .where({ email })
         .first()
-        .catch((err) => { console.log(err); throw err });
+        .catch(err => { console.log(err); throw err });
 
 //export modules for external use
 module.exports = { save, list, getUserByEmail }
