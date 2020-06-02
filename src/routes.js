@@ -52,7 +52,7 @@ routes.post('/auth/signup', validationRules, async (request, response) => {
     const user = await userRepository.getUserByEmail(request.body.email);
     const token = jwt.sign({ user }, config.secretKey);
 
-    return response.send(JSON.stringify({ acess_token: token }));
+    return response.send(JSON.stringify({ acess_token: token, user_type: user.type }));
 });
 
 //user login
@@ -69,7 +69,7 @@ routes.post('/auth/login', async (request, response) => {
 
         if (isPasswordCorrect) {
             const token = jwt.sign({ user }, config.secretKey);
-            return response.send(JSON.stringify({ acess_token: token }));
+            return response.send(JSON.stringify({ acess_token: token, user_type: user.type }));
         }
 
         return response.sendStatus(401);
